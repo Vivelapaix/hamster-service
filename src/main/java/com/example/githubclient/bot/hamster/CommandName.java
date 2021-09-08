@@ -13,6 +13,10 @@ public enum CommandName {
 
     GET_EXCHANGE_PAIR_AVG_PRICE_INFO("get_exchange_pair_avg_price_info"),
 
+    GET_ALL_ORDERS("get_all_orders"),
+
+    GET_MY_TRADES("get_my_trades"),
+
     ;
 
     private static final Map<String, CommandName> commandByName;

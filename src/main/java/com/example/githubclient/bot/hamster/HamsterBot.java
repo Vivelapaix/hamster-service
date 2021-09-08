@@ -5,9 +5,10 @@ import com.example.githubclient.bot.SimpleLongPollingBot;
 import com.example.githubclient.bot.common.BotCommand;
 import com.example.githubclient.bot.common.TelegramUpdateMessage;
 import com.example.githubclient.config.HamsterBotSettings;
+import com.example.githubclient.model.AllOrders;
 import com.example.githubclient.model.AvgPrice;
 import com.example.githubclient.model.CryptoSymbol;
-import com.example.githubclient.model.KlineTimeInterval;
+import com.example.githubclient.model.MyTrades;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,24 +21,15 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 import static com.example.githubclient.bot.hamster.ExchangeCallbackDataType.GET_ALL_EXCHANGE_PAIRS;
 import static com.example.githubclient.bot.hamster.ExchangeCallbackDataType.GET_PAIR_INFO;
-import static com.example.githubclient.model.KlineTimeInterval.FIFTEEN_MINUTES;
-import static com.example.githubclient.model.KlineTimeInterval.FIVE_MINUTES;
-import static com.example.githubclient.model.KlineTimeInterval.SIXTY_MINUTES;
-import static com.example.githubclient.model.KlineTimeInterval.TEN_MINUTES;
-import static com.example.githubclient.model.KlineTimeInterval.THIRTY_MINUTES;
 import static com.example.githubclient.utils.TelegramUtils.buildAvgPricePairInfoText;
-import static com.example.githubclient.utils.TelegramUtils.buildExchangePairText;
 import static com.example.githubclient.utils.TelegramUtils.inlineKeyboardButton;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -78,6 +70,8 @@ public class HamsterBot extends SimpleLongPollingBot<HamsterBot, HamsterBotSetti
                     } catch (IOException e) {
                         sendMessage(new SendMessage(message.raw().getMessage().getChatId(), "Проверьте название пары или параметры команды"));
                         e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 },
                 () -> log.warn("Failed to parse command: msg={}", message)
@@ -100,13 +94,19 @@ public class HamsterBot extends SimpleLongPollingBot<HamsterBot, HamsterBotSetti
         }
     }
 
-    private void executeCommand(String userId, String login, Long chatId, BotCommand<CommandName> command) throws IOException {
+    private void executeCommand(String userId, String login, Long chatId, BotCommand<CommandName> command) throws Exception {
         switch (command.name()) {
             case GET_ALL_EXCHANGE_PAIRS:
                 sendAllExchangePairsKeyboard(chatId);
                 break;
             case GET_EXCHANGE_PAIR_AVG_PRICE_INFO:
                 sendExchangePairAvgPriceInfo(chatId, command.arg(0).orElse("BTCUSDT").toUpperCase());
+                break;
+            case GET_ALL_ORDERS:
+                sendAllOrders(chatId, command.arg(0).orElse("BTCUSDT").toUpperCase());
+                break;
+            case GET_MY_TRADES:
+                sendMyTrades(chatId, command.arg(0).orElse("BTCUSDT").toUpperCase());
                 break;
             default:
                 log.error("Unsupported command: command={}", command);
@@ -143,6 +143,18 @@ public class HamsterBot extends SimpleLongPollingBot<HamsterBot, HamsterBotSetti
         SendMessage message = new SendMessage(chatId,
             buildAvgPricePairInfoText(pair, exchangePairInfo) + "\n\n" + buildPricePercentChange(pair)
         );
+        sendMessage(message);
+    }
+
+    private void sendAllOrders(Long chatId, String pair) throws Exception {
+        List<AllOrders> allOrders = binanceService.getAllOrders(pair);
+        SendMessage message = new SendMessage(chatId, allOrders.toString());
+        sendMessage(message);
+    }
+
+    private void sendMyTrades(Long chatId, String pair) throws Exception {
+        List<MyTrades> allOrders = binanceService.getMyTrades(pair);
+        SendMessage message = new SendMessage(chatId, allOrders.toString());
         sendMessage(message);
     }
 
