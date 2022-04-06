@@ -15,6 +15,7 @@ public class HamsterApplication {
 	public static void main(String[] args) {
 		//SpringApplication.run(HamsterApplication.class, args);
 		ApiContextInitializer.init();
+
 		SpringApplication.run(HamsterApplication.class, args);
 	}
 }

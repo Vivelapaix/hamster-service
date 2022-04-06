@@ -23,8 +23,13 @@ public class TelegramUpdateMessage {
         return update;
     }
 
-    public boolean isChannelCommand() {
+    public boolean isChannelCommand2() {
         return update.getChannelPost() != null && BOT_COMMAND.value.equals(update.getChannelPost().getEntities().get(0).getType());
+    }
+
+    public boolean isChannelCommand() {
+        return update != null && update.hasMessage() && update.getMessage().getEntities() != null
+            && BOT_COMMAND.value.equals(update.getMessage().getEntities().get(0).getType());
     }
 
     public boolean isChannelMessage() {
