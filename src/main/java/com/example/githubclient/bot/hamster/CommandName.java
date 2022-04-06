@@ -17,6 +17,15 @@ public enum CommandName {
 
     GET_MY_TRADES("get_my_trades"),
 
+    GET_ACCOUNT("get_account"),
+
+    P2P_BINANCE("p2p_binance@hamster_signal_bot"),
+
+    MARKUP("markup"),
+
+    HIDE_MARKUP("hide_markup"),
+
+    TEMPLATE("template@hamster_signal_bot")
     ;
 
     private static final Map<String, CommandName> commandByName;

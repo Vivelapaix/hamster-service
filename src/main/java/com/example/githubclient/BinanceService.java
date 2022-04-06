@@ -1,5 +1,6 @@
 package com.example.githubclient;
 
+import com.example.githubclient.model.Account;
 import com.example.githubclient.model.AllOrders;
 import com.example.githubclient.model.AvgPrice;
 import com.example.githubclient.model.CryptoSymbol;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BinanceService {
@@ -46,5 +48,12 @@ public class BinanceService {
 
     public List<MyTrades> getMyTrades(String pair) throws Exception {
         return client.getMyTrades(pair, apiKey, secretKey);
+    }
+
+    public List<Account.Balance> getAccountCoins() throws Exception {
+        return client.getAccountCoins(apiKey, secretKey).getBalances()
+            .stream()
+            .filter(x -> x.isPairInMyAccount())
+            .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.githubclient;
 
+import com.example.githubclient.model.Account;
 import com.example.githubclient.model.AllOrders;
 import com.example.githubclient.model.AvgPrice;
 import com.example.githubclient.model.ExchangeInfo;
@@ -44,4 +45,11 @@ public interface BinanceApiInterface {
                                      @Query("signature") String secretSignature,
                                      @Header("Content-Type") String contentType,
                                      @Header("X-MBX-APIKEY") String apiKey);
+
+    @GET("account")
+    Call<Account> getAccount(@Query("recvWindow") long recvWindow,
+                             @Query("timestamp") long timestamp,
+                             @Query("signature") String secretSignature,
+                             @Header("Content-Type") String contentType,
+                             @Header("X-MBX-APIKEY") String apiKey);
 }

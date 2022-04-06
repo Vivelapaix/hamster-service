@@ -1,5 +1,6 @@
 package com.example.githubclient;
 
+import com.example.githubclient.model.Account;
 import com.example.githubclient.model.AllOrders;
 import com.example.githubclient.model.AvgPrice;
 import com.example.githubclient.model.ExchangeInfo;
@@ -143,6 +144,33 @@ public class BinanceClient {
         );
 
         Response<List<MyTrades>> response = retrofitCall.execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException(response.errorBody() != null
+                ? response.errorBody().string() : "Unknown error");
+        }
+
+        return response.body();
+    }
+
+    /**
+     https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
+     */
+    public Account getAccountCoins(String apiKey, String secretKey) throws Exception {
+        long timestamp = new Date().getTime();
+        String query = "recvWindow=60000&timestamp=" + timestamp;
+
+        String signature = sign(secretKey, query);
+
+        Call<Account> retrofitCall = api.getAccount(
+            60000,
+            timestamp,
+            signature,
+            ALL_ORDERS_CONTENT_TYPE,
+            apiKey
+        );
+
+        Response<Account> response = retrofitCall.execute();
 
         if (!response.isSuccessful()) {
             throw new IOException(response.errorBody() != null
