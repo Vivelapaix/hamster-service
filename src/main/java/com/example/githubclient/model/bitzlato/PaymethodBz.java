@@ -9,6 +9,9 @@ public class PaymethodBz implements Serializable {
     @SerializedName("id")
     @JsonProperty("id")
     public int id;
+    @SerializedName("name")
+    @JsonProperty("name")
+    public String name;
 
     public int getId() {
         return id;
@@ -25,8 +28,4 @@ public class PaymethodBz implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    @SerializedName("name")
-    @JsonProperty("name")
-    public String name;
 }

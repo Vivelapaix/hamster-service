@@ -2,8 +2,10 @@ package com.example.githubclient.p2p.bitzlato;
 
 
 import com.example.githubclient.model.AssetBinanceP2P;
+import com.example.githubclient.model.bitzlato.AssetBitZlatoP2P;
 import com.example.githubclient.model.bitzlato.BitZlatoP2PBoardRequest;
 import com.example.githubclient.model.bitzlato.BitZlatoP2PBoardResponse;
+import com.example.githubclient.model.bitzlato.PayMethodType;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -26,11 +28,11 @@ public class BitZlatoP2PClient {
         api = retrofit.create(BitzlatoP2PInterface.class);
     }
 
-    public BitZlatoP2PBoardResponse getP2PBuyOffers(String transAmount, AssetBinanceP2P asset) throws IOException {
+    public BitZlatoP2PBoardResponse getP2PBuyOffers(String transAmount, AssetBitZlatoP2P asset) throws IOException {
         BitZlatoP2PBoardRequest request = new BitZlatoP2PBoardRequest();
             request.setCryptocurrency(asset.getValue());
             request.setLimit(20);
-            request.setPaymethod("443");
+            request.setPaymethod(PayMethodType.TINKOFF.getCode());
             request.setCurrency("RUB");
             request.setOwnerActive(true);
             request.setPaymethod("purchase");
@@ -49,11 +51,11 @@ public class BitZlatoP2PClient {
     }
 
 
-    public BitZlatoP2PBoardResponse getP2PSellOffers(String transAmount, AssetBinanceP2P asset) throws IOException {
+    public BitZlatoP2PBoardResponse getP2PSellOffers(String transAmount, AssetBitZlatoP2P asset) throws IOException {
         BitZlatoP2PBoardRequest request = new BitZlatoP2PBoardRequest();
         request.setCryptocurrency(asset.getValue());
         request.setLimit(20);
-        request.setPaymethod("443");
+        request.setPaymethod(PayMethodType.TINKOFF.getCode());
         request.setCurrency("RUB");
         request.setOwnerActive(true);
         request.setPaymethod("selling");

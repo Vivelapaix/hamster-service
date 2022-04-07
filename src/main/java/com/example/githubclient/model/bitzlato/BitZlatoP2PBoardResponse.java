@@ -9,14 +9,14 @@ import java.util.List;
 public class BitZlatoP2PBoardResponse implements Serializable {
    @SerializedName("data")
    @JsonProperty("data")
-   private List<Datum> datum;
+   private List<Data> data;
 
-   public List<Datum> getDatum() {
-      return datum;
+   public List<Data> getDatum() {
+      return data;
    }
 
-   public void setDatum(List<Datum> datum) {
-      this.datum = datum;
+   public void setDatum(List<Data> data) {
+      this.data = data;
    }
 }
 
